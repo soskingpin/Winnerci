@@ -532,24 +532,13 @@
             text-align: center;
             padding: 20px;
         }
-        .brand-name {
-            font-size: clamp(3.5rem, 10vw, 7rem);
-            font-weight: 700;
-            margin-bottom: 2rem;
-            text-transform: uppercase;
-            letter-spacing: -0.05em;
-            color: transparent;
-            background: linear-gradient(90deg, var(--secondary), #90EE90);
-            -webkit-background-clip: text;
-            background-clip: text;
-            background-size: 200% auto;
-            animation: shine 3s linear infinite;
-            font-family: 'Poppins', sans-serif;
-        }
-        @keyframes shine {
-            to {
-                background-position: 200% center;
-            }
+        .brand-logo {
+            max-width: 400px;
+            height: auto;
+            margin-bottom: 20px;
+            opacity: 0;
+            transform: scale(0.8);
+            animation: logoPop 1.2s cubic-bezier(0.175, 0.885, 0.32, 1.275) 1.2s forwards;
         }
         .loading-bar {
             width: 80%;
@@ -575,6 +564,33 @@
                 transform: scale(0.95);
             }
         }
+        @keyframes logoPop {
+            0% {
+                opacity: 0;
+                transform: scale(0.8);
+                filter: blur(8px);
+            }
+            25% {
+                opacity: 0.7;
+                transform: scale(1.1) rotate(-2deg);
+                filter: blur(2px);
+            }
+            50% {
+                opacity: 1;
+                transform: scale(1.2) rotate(2deg);
+                filter: blur(0);
+            }
+            70% {
+                transform: scale(1.15) rotate(-1deg);
+            }
+            85% {
+                transform: scale(1.05) rotate(1deg);
+            }
+            100% {
+                opacity: 1;
+                transform: scale(1) rotate(0);
+            }
+        }
     </style>
 </head>
 <body>
@@ -582,13 +598,15 @@
     <div class="intro-overlay" id="introOverlay">
         <canvas id="candlestickCanvas"></canvas>
         <div class="brand-reveal">
-            <div class="brand-name">WINNER CIRCLE</div>
+            <img src="https://i.postimg.cc/Mcfx1kcY/logo.png" 
+                 alt="Winner Circle Logo" 
+                 class="brand-logo">
             <div class="loading-bar">
                 <div class="loading-progress" id="loadingProgress"></div>
             </div>
         </div>
     </div>
-    <!-- Your existing website content starts here -->
+    
     <header>
         <div class="container">
             <div class="header-content">
@@ -606,6 +624,7 @@
             </div>
         </div>
     </header>
+    
     <section class="hero" id="home">
         <div class="container">
             <div class="hero-content">
@@ -618,6 +637,7 @@
             </div>
         </div>
     </section>
+    
     <section class="performance">
         <div class="container">
             <div class="stats">
@@ -627,6 +647,7 @@
             </div>
         </div>
     </section>
+    
     <section class="courses" id="courses">
         <div class="container">
             <div class="section-header">
@@ -693,6 +714,7 @@
             </div>
         </div>
     </section>
+    
     <section class="cta" id="contact">
         <div class="container">
             <h2>Connect With Curtis Branden</h2>
@@ -712,6 +734,7 @@
                 </a>
             </div>
         </section>
+    
     <section class="join-section">
         <div class="container">
             <div class="join-container">
@@ -724,6 +747,7 @@
             </div>
         </div>
     </section>
+    
     <footer>
         <div class="container">
             <div class="footer-content">
@@ -763,6 +787,7 @@
             </div>
         </div>
     </footer>
+    
     <div class="modal" id="paymentModal">
         <div class="modal-content">
             <div class="modal-header">
@@ -816,14 +841,16 @@
             </div>
         </div>
     </div>
+    
     <script>
-        // Initialize intro animation
         document.addEventListener('DOMContentLoaded', function() {
             // Prevent scrolling during intro
             document.body.style.overflow = 'hidden';
-            // Initialize the intro
+            
+            // Initialize intro animation
             initIntro();
-            // Your existing website JavaScript
+            
+            // Payment modal functionality
             const modal = document.getElementById('paymentModal');
             const enrollBtns = document.querySelectorAll('.enroll-btn');
             const coursePrice = document.getElementById('coursePrice');
@@ -832,68 +859,73 @@
             const innbucksBtn = document.getElementById('innbucksBtn');
             const ecocashBtn = document.getElementById('ecocashBtn');
             const confirmPaymentBtn = document.getElementById('confirmPaymentBtn');
+            
             // Current course info
             let currentCourse = '';
             let currentPrice = '';
             const whatsappNumber = '447404100434';
+            
             // Open modal when enroll button is clicked
             enrollBtns.forEach(btn => {
                 btn.addEventListener('click', function() {
                     currentCourse = this.getAttribute('data-course');
                     currentPrice = this.getAttribute('data-price');
-                    // Update the course price in modal
                     coursePrice.textContent = currentPrice;
-                    // Show modal
                     modal.style.display = 'block';
-                    document.body.style.overflow = 'hidden'; // Prevent scrolling
+                    document.body.style.overflow = 'hidden';
                 });
             });
+            
             // Close modal when back button is clicked
             backBtn.addEventListener('click', function() {
                 modal.style.display = 'none';
-                document.body.style.overflow = 'auto'; // Enable scrolling
+                document.body.style.overflow = 'auto';
             });
-            // Close modal when clicking outside of modal content
+            
+            // Close modal when clicking outside
             window.addEventListener('click', function(e) {
                 if (e.target === modal) {
                     modal.style.display = 'none';
                     document.body.style.overflow = 'auto';
                 }
             });
-            // Ecocash USSD dialer functionality
+            
+            // Ecocash USSD dialer
             ecocashBtn.addEventListener('click', function(e) {
                 e.preventDefault();
-                const ecocashNumber = '0789010987'; // Removed the +263 prefix for USSD
+                const ecocashNumber = '0789010987';
                 const ussdCode = `*153*1*1*${ecocashNumber}*${currentPrice}%23`;
                 window.location.href = `tel:${ussdCode}`;
             });
             
-            // InnBucks USSD dialer functionality
+            // InnBucks USSD dialer
             innbucksBtn.addEventListener('click', function(e) {
                 e.preventDefault();
                 const ussdCode = '*569%23';
                 window.location.href = `tel:${ussdCode}`;
             });
             
-            // Crypto button functionality
+            // Crypto button
             cryptoBtn.addEventListener('click', function() {
                 const message = `Hello Curtis, I am interested in the ${currentCourse} package priced at $${currentPrice}. Please send me the USDT/Bitcoin address to make payment. My name is [Your Full Name].`;
                 const whatsappUrl = `https://wa.me/${whatsappNumber}?text=${encodeURIComponent(message)}`;
                 window.open(whatsappUrl, '_blank');
             });
             
-            // Confirm Payment button functionality
+            // Confirm Payment button
             confirmPaymentBtn.addEventListener('click', function() {
                 const message = `Hello Curtis, I have completed payment for the ${currentCourse} package priced at $${currentPrice}. I am dropping the payment proof and confirming the payment method used. My name is [Your Full Name].`;
                 const whatsappUrl = `https://wa.me/${whatsappNumber}?text=${encodeURIComponent(message)}`;
                 window.open(whatsappUrl, '_blank');
             });
         });
+        
         function initIntro() {
             const canvas = document.getElementById('candlestickCanvas');
             const ctx = canvas.getContext('2d');
             const loadingProgress = document.getElementById('loadingProgress');
             const introOverlay = document.getElementById('introOverlay');
+            
             // Set canvas dimensions
             function resizeCanvas() {
                 const dpr = window.devicePixelRatio || 1;
@@ -903,12 +935,14 @@
                 ctx.scale(dpr, dpr);
                 drawChartGrid();
             }
+            
             // Draw chart grid
             function drawChartGrid() {
                 ctx.clearRect(0, 0, canvas.width, canvas.height);
                 const width = canvas.clientWidth;
                 const height = canvas.clientHeight;
                 const gridColor = 'rgba(255, 255, 255, 0.03)';
+                
                 // Vertical grid lines
                 ctx.strokeStyle = gridColor;
                 ctx.lineWidth = 1;
@@ -918,6 +952,7 @@
                     ctx.lineTo(x, height);
                     ctx.stroke();
                 }
+                
                 // Horizontal grid lines
                 for (let y = 0; y < height; y += height / 5) {
                     ctx.beginPath();
@@ -926,6 +961,7 @@
                     ctx.stroke();
                 }
             }
+            
             // Candlestick parameters
             const candleWidth = 16;
             const candleGap = 6;
@@ -933,6 +969,7 @@
             let offsetX = 0;
             let candles = [];
             let lastClose = 1.0800;
+            
             // Generate candlesticks
             function generateCandle(prevClose) {
                 const pipSize = 0.0001;
@@ -941,10 +978,12 @@
                 let close = open + trendBias * (5 + Math.random() * 15) * pipSize;
                 let high = Math.max(open, close) + Math.random() * 8 * pipSize;
                 let low = Math.min(open, close) - Math.random() * 8 * pipSize;
+                
                 // Ensure minimum candle body
                 if (Math.abs(close - open) < 3 * pipSize) {
                     close = open + (Math.random() > 0.5 ? 1 : -1) * 3 * pipSize;
                 }
+                
                 return {
                     open: parseFloat(open.toFixed(4)),
                     close: parseFloat(close.toFixed(4)),
@@ -952,27 +991,32 @@
                     low: parseFloat(low.toFixed(4))
                 };
             }
+            
             // Initialize candles
             for (let i = 0; i < candleCount; i++) {
                 let candle = generateCandle(lastClose);
                 lastClose = candle.close;
                 candles.push(candle);
             }
+            
             // Draw candlestick
             function drawCandle(x, candle) {
                 const isBullish = candle.close > candle.open;
                 const bodyTop = Math.min(candle.open, candle.close);
                 const bodyBottom = Math.max(candle.open, candle.close);
                 const scaleY = 8000;
+                
                 // Calculate pixel positions
                 const height = canvas.clientHeight;
                 const bodyHeight = (bodyBottom - bodyTop) * scaleY;
                 const bodyY = height * 0.7 - (bodyTop - 1.0750) * scaleY;
                 const wickTop = height * 0.7 - (candle.high - 1.0750) * scaleY;
                 const wickBottom = height * 0.7 - (candle.low - 1.0750) * scaleY;
+                
                 // Colors based on your site's color scheme
                 const bodyColor = isBullish ? 'rgba(50, 205, 50, 0.9)' : 'rgba(255, 0, 255, 0.9)';
                 const wickColor = isBullish ? 'rgba(50, 205, 50, 0.95)' : 'rgba(255, 0, 255, 0.95)';
+                
                 // Draw wick
                 ctx.beginPath();
                 ctx.strokeStyle = wickColor;
@@ -980,25 +1024,31 @@
                 ctx.moveTo(x + candleWidth / 2, wickTop);
                 ctx.lineTo(x + candleWidth / 2, wickBottom);
                 ctx.stroke();
+                
                 // Draw body
                 ctx.fillStyle = bodyColor;
                 ctx.fillRect(x, bodyY, candleWidth, bodyHeight);
+                
                 // Body highlight
                 ctx.strokeStyle = isBullish ? 'rgba(144, 238, 144, 0.7)' : 'rgba(255, 105, 180, 0.7)';
                 ctx.lineWidth = 1;
                 ctx.strokeRect(x + 0.5, bodyY + 0.5, candleWidth - 1, bodyHeight - 1);
             }
+            
             // Animation loop
             function animate() {
                 drawChartGrid();
+                
                 // Slow down the movement
                 offsetX -= 0.6;
+                
                 // Cycle candles when needed
                 if (Math.abs(offsetX) > (candleWidth + candleGap)) {
                     offsetX += candleWidth + candleGap;
                     candles.shift();
                     candles.push(generateCandle(candles[candles.length - 1].close));
                 }
+                
                 // Draw all candles with offset
                 for (let i = 0; i < candles.length; i++) {
                     let x = i * (candleWidth + candleGap) + offsetX;
@@ -1006,14 +1056,17 @@
                         drawCandle(x, candles[i]);
                     }
                 }
+                
                 requestAnimationFrame(animate);
             }
+            
             // Start the intro sequence
             function startIntroSequence() {
                 // Start loading bar
                 setTimeout(() => {
                     loadingProgress.style.width = '100%';
                 }, 1000);
+                
                 // Wait for animations to complete
                 setTimeout(() => {
                     // Fade out overlay
@@ -1022,8 +1075,9 @@
                         introOverlay.style.display = 'none';
                         document.body.style.overflow = 'auto';
                     }, 800);
-                }, 4000);
+                }, 4500);
             }
+            
             // Initialize and start animations
             resizeCanvas();
             window.addEventListener('resize', resizeCanvas);
